@@ -1,45 +1,48 @@
 package practice
 
-import "strings"
+import (
+	"strings"
+)
 
-func wordBreak(s string, wordDict []string) []string {
-	wordsMap := map[string]bool{}
-	var result []string
-	for _, word := range wordDict {
-		wordsMap[word] = true
-	}
-	searchWrod(s, wordsMap, "", &result)
-	return result
-}
+func wordBreak(s string, wordDict []string) (sentences []string) {
+	dp := make([][]string, len(s))
+	n := len(s)
 
-func searchWrod(s string, wordDict map[string]bool, preStr string, result *[]string) {
-	if s == "" {
-		*result = append(*result, preStr)
-	}
-	preWords := checkWords(s, wordDict)
-	//回溯
-	if len(preWords) == 0 {
-		return
-	}
-	for _, word := range preWords {
-		if preStr != "" {
-			searchWrod(s[len(word):], wordDict, preStr + " " + word, result)
-		} else {
-			searchWrod(s[len(word):], wordDict,  word, result)
+	var searchWrod func(s string, idx int) ([]string)
+	searchWrod = func(s string, idx int) ([]string) {
+		//dp回溯
+		if dp[idx] != nil {
+			return dp[idx][:]
 		}
-
+		result := []string{}
+		//检查当前向后可匹配单词
+		for _, word := range checkWords(s, wordDict) {
+			//最后一个单词返回,不再向后查找
+			if idx + len(word) == n {
+				result = append(result, word)
+				continue
+			}
+			//继续查找加入结果
+			for _, suffix := range searchWrod(s[len(word):], idx + len(word))  {
+				result = append(result, word + " " + suffix)
+			}
+		}
+		// 记录结果
+		dp[idx] = result
+		return result
 	}
+	searchWrod(s, 0)
+	return dp[0]
 }
 
 //检查后面是否可以继续
-func checkWords(s string, wordDict map[string]bool) []string {
-	res := []string{}
-	for word := range wordDict {
+func checkWords(s string, wordDict []string) (res []string) {
+	for _, word := range wordDict {
 		if strings.HasPrefix(s, word) {
 			res = append(res, word)
 		}
 	}
-	return res
+	return
 }
 //
 //func wordBreak(s string, wordDict []string) (sentences []string) {
