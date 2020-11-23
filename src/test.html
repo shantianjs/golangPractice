@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+<script type="text/javascript">
+    alert(str); //弹窗"undefined"
+    var str = "aaa";
+</script>
+//代码块一
+<script type="text/javascript">
+    alert(str);//浏览器报错,但并没有弹出信息窗
+</script>
+//代码块二
+
+//js在预处理期对变量进行了声明处理,但是并没有进行初始化与赋值，所以导致代码块二中的变量是unfiened的，而代码一中的变量是完全不存在的，所以浏览器报错。
+</body>
+</html>

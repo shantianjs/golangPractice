@@ -36,3 +36,10 @@ func sortByBits(arr []int) []int {
 	}
 	return res
 }
+
+func onesCount(x int) (c int) {
+	for ; x > 0; x /= 2 {
+		c += x % 2
+	}
+	return
+}
