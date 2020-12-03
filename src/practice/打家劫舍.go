@@ -49,14 +49,20 @@ func searchMax(nums []int) int {
 }
 
 func robIII(root *TreeNode) int {
+	record := map[*TreeNode][2]int{}
 	var sum func(node *TreeNode) (int,int)
 	sum = func(node *TreeNode) (int,int) {
 		if node == nil {
 			return 0,0
 		}
+		if d, ok := record[node]; ok {
+			return d[0], d[1]
+		}
 		ls, ln := sum(node.Left)
 		rs, rn := sum(node.Right)
-		return node.Val + ln + rn, max(ls, ln) + max(rs, rn)
+		d := [2]int{node.Val + ln + rn, max(ls, ln) + max(rs, rn)}
+		record[node] = d
+		return d[0], d[1]
 	}
 	return max(sum(root))
 }
